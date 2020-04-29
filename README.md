@@ -7,6 +7,6 @@ getting blocked by antivirus software.
 The original file can be then reinstated. 
 
 Usage:
-* ENCODE -> xor binary.exe other.dat
-* DECODE -> xor other.dat binary.exe
+* ENCODE -> xor [binary.exe] [other.dat]
+* DECODE -> xor [other.dat] [binary.exe]
 
