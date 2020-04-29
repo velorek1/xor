@@ -32,8 +32,6 @@ reinstated.
 
 //CONSTANTS
 #define XOR_KEY 0x11110011
-#define ENCODE 1
-#define DECODE 0
 
 //HELP MESSAGES
 
