@@ -38,8 +38,7 @@ reinstated.
 //HELP MESSAGES
 
 #define HELPMSG  "[+] " AWHT "x0r" ARST " your binary files\n"\
-  AYEL "ENCODE:" ARST " xor " AYEL "1" ARST" [input_file] [output_file]\n"\
-AYEL "DECODE:" ARST " xor " AYEL "0" ARST" [input_file] [output_file]\n"
+  AYEL "ENCODE/DECODE:" ARST " xor" " [input_file] " "[output_file]\n"
 
 //INFO MESSAGES
 #define NFO_MSG1_EN AYEL "Success!! "ARST "Binary file [%s] with %ld bytes.\nNew file [%s] written with %ld bytes.\n"
@@ -55,26 +54,24 @@ AYEL "DECODE:" ARST " xor " AYEL "0" ARST" [input_file] [output_file]\n"
 
 /* FUNCTION DECLARATIONS */
 
-void    processOptions(int processMode, char *sourceFileStr,
+void    processOptions(char *sourceFileStr,
 		       char *destinationFileStr);
-long    fileSize(FILE * fileHandler);
+long fileSize(FILE * fileHandler);
 int     openFile(FILE ** fileHandler, char *fileName, char *mode);
 int     closeFile(FILE * fileHandler);
-long    encodeFile(FILE * fileHandler, FILE * fileHandler2);
-long    decodeFile(FILE * fileHandler, FILE * fileHandler2);
+long    encodeDecodeFile(FILE * fileHandler, FILE * fileHandler2);
 
 int main(int argc, char *argv[]) {
   int     processMode;
 
-  if(argc == 4) {
+  if(argc == 3) {
     //Number of arguments is ok!
-    if(strcmp(argv[2], argv[3]) == 0) {
+    if(strcmp(argv[1], argv[2]) == 0) {
       //Error : same name for source and destination files
       fprintf(stderr, ERR_MSG2_EN);
     } else {
-      //Open files? Encode or Decode?
-      processMode = atoi(argv[1]);	//Argument one to int: Encode 1 or Decode 0?
-      processOptions(processMode, argv[2], argv[3]);
+      //Open files? 
+      processOptions(argv[1], argv[2]);
     }
   } else {
     //Error in no. of arguments. Display help and exit.
@@ -83,19 +80,17 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void processOptions(int processMode, char *sourceFileStr,
+void processOptions(char *sourceFileStr,
 		    char *destinationFileStr) {
   long    newFileSize;
   int     okFile, okFile2;
   FILE   *fileSource, *fileDestination;
 
-  switch (processMode) {
-    case ENCODE:		//Encode
       okFile = openFile(&fileSource, sourceFileStr, "rb");	//read only
       okFile2 = openFile(&fileDestination, destinationFileStr, "w");	//create destination file   
       if(okFile == 1 && okFile2 == 1) {
 	//Success!
-	newFileSize = encodeFile(fileSource, fileDestination);
+	newFileSize = encodeDecodeFile(fileSource, fileDestination);
 	printf(NFO_MSG1_EN, sourceFileStr, fileSize(fileSource), destinationFileStr, newFileSize);	//Info.
 	closeFile(fileSource);
 	closeFile(fileDestination);
@@ -103,26 +98,6 @@ void processOptions(int processMode, char *sourceFileStr,
 	//Error opening files.
 	fprintf(stderr, ERR_MSG1_EN);
       }
-      break;
-    case DECODE:		//Decode
-      okFile = openFile(&fileSource, sourceFileStr, "r");	//read only
-      okFile2 = openFile(&fileDestination, destinationFileStr, "wb");	//create destination file   
-      if(okFile == 1 && okFile2 == 1) {
-	//Success!
-	newFileSize = decodeFile(fileSource, fileDestination);
-	printf(NFO_MSG2_EN, sourceFileStr, fileSize(fileSource), destinationFileStr, newFileSize);	//Info.
-	closeFile(fileSource);
-	closeFile(fileDestination);
-      } else {
-	//Error opening files.
-	fprintf(stderr, ERR_MSG1_EN);
-      }
-      break;
-    default:			//Incorrect option              
-      fprintf(stderr, ERR_MSG3_EN);
-      break;
-  }
-  return;
 }
 long fileSize(FILE * fileHandler) {
   long    tempSize;
@@ -153,7 +128,7 @@ int openFile(FILE ** fileHandler, char *fileName, char *mode) {
   return ok;
 }
 
-long encodeFile(FILE * fileHandler, FILE * fileHandler2) {
+long encodeDecodeFile(FILE * fileHandler, FILE * fileHandler2) {
   long    byteCount = 0;
   char    ch,xorch;
 
@@ -170,25 +145,3 @@ long encodeFile(FILE * fileHandler, FILE * fileHandler2) {
   return byteCount;
 }
 
-long decodeFile(FILE * fileHandler, FILE * fileHandler2) {
-  long    i = 0;
-  long    byteCount = 0;
-  char    ch;
-  char    xorch;
-
-  //Read char by char
-  if(fileHandler != NULL && fileHandler2 != NULL) {
-    rewind(fileHandler);	//Go to start of file
-    ch = getc(fileHandler);	//peek into file
-    while(!feof(fileHandler)) {
-      //Read until SEPARATOR '.'
-      xorch = ch ^ XOR_KEY;
-      i++;
-      fwrite(&xorch, sizeof(xorch), 1, fileHandler2);	// Write data to file
-      byteCount++;
-      ch = getc(fileHandler);
-    }
-  }
-
-  return byteCount;
-}
