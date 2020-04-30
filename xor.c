@@ -60,7 +60,6 @@ int     closeFile(FILE * fileHandler);
 long    encodeDecodeFile(FILE * fileHandler, FILE * fileHandler2);
 
 int main(int argc, char *argv[]) {
-  int     processMode;
 
   if(argc == 3) {
     //Number of arguments is ok!
@@ -85,7 +84,7 @@ void processOptions(char *sourceFileStr,
   FILE   *fileSource, *fileDestination;
 
       okFile = openFile(&fileSource, sourceFileStr, "rb");	//read only
-      okFile2 = openFile(&fileDestination, destinationFileStr, "w");	//create destination file   
+      okFile2 = openFile(&fileDestination, destinationFileStr, "wb");	//create destination file   
       if(okFile == 1 && okFile2 == 1) {
 	//Success!
 	newFileSize = encodeDecodeFile(fileSource, fileDestination);
