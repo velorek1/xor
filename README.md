@@ -8,7 +8,7 @@ The original file can be then reinstated.
 
 Usage:
 
-* **Encode** -> xor BINARY.EXE OTHER.DAT
+* **Encode** -> xor BINARY.EXE NEWFILE.DAT
 
-* **Decode** -> xor OTHER.DAT BINARY.EXE
+* **Decode** -> xor NEWFILE.DAT BINARY.EXE
 
