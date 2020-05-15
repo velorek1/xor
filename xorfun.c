@@ -724,10 +724,10 @@ int listFiles(LISTCHOICE ** listBox1, char *directory) {
   int     lenDir;		//length of directory
 
   //Add elements to switch directory at the beginning for convenience.
-  strcpy(temp, CURRENTDIR);
+  strcpy(temp, "[INPUT FILE]");
   //Add spaces
   addSpaces(temp);
-  *listBox1 = addend(*listBox1, newelement(temp, "[BACK]", DIRECTORY));	// "."
+  *listBox1 = addend(*listBox1, newelement(temp, "[INPUT FILE]", DIRECTORY));	// "."
   strcpy(temp, CHANGEDIR);
   //Add spaces
   addSpaces(temp);
@@ -1203,7 +1203,8 @@ int opfiledialog(int wherey, char filex[MAX_TEXTBOX]) {
     if(ch == K_ENTER && scrollData.isDirectory == FILEITEM)
       exitFlag = 1;		//File selected
     if(scrollData.itemIndex != 0){
-        strcpy(filex, scrollData.path);
+        if (strcmp(scrollData.path,"..") != 0)
+           strcpy(filex, scrollData.path);
         //printf(AYEL "\n%s", filex);
     }
  
@@ -1251,38 +1252,50 @@ int main(){
  opfiledialog(wherey, filex);
  strcpy(textbox1, filex);
  resetAnsi(0);
- if (strcmp(textbox1, "") != 0) {
- 	write_str(30,wherey+5,textbox1,40,97);
- 	resetAnsi(0);
- 	textbox(30,wherey+6,25,"Output File:",textbox2,37,37,37);
-	if (strcmp(textbox2, "") != 0) {
- 	  resetAnsi(0);
- 	  resetTerm();
- 	  gotoxy(wherex,wherey+9);
- 	  printf("\n");
- 	  printf("\r");
- 	  showcursor();
- 	  processOptions(textbox1,textbox2);
-	} else
-	{
-   	  resetAnsi(0);
-   	  write_str(30,wherey+7,"File not selected!. Exiting!",40,97);
-   	  resetTerm();
-   	  gotoxy(wherex,wherey+9);
-   	  printf("\n");
-   	  printf("\r");
-   	  showcursor();
-	}
- } else
- {
+ if (strcmp(textbox1, "") == 0) {
+   textbox(30,wherey+5,25,"Input File:",textbox1,37,37,37);
+   textbox(30,wherey+6,25,"Output File:",textbox2,37,37,37);
+   if (strcmp(textbox1, "") == 0 || strcmp(textbox2, "") == 0) {
+     resetAnsi(0);
+     write_str(30,wherey+7,"File not selected!. Exiting!",40,97);
+     resetTerm();
+     gotoxy(wherex,wherey+9);
+     printf("\n");
+     printf("\r");
+     showcursor();
+
+   } else{
+     resetAnsi(0);
+     resetTerm();
+     gotoxy(wherex,wherey+9);
+     printf("\n");
+     printf("\r");
+     showcursor();
+     processOptions(textbox1,textbox2);
+  }
+} else{
+   write_str(30,wherey+5,textbox1,40,97);
    resetAnsi(0);
-   write_str(30,wherey+5,"File not selected!. Exiting!",40,97);
-   resetTerm();
-   gotoxy(wherex,wherey+9);
-   printf("\n");
-   printf("\r");
-   showcursor();
-}
+   textbox(30,wherey+6,25,"Output File:",textbox2,37,37,37);
+   if (strcmp(textbox2, "") != 0) {
+     resetAnsi(0);
+     resetTerm();
+     gotoxy(wherex,wherey+9);
+     printf("\n");
+     printf("\r");
+     showcursor();
+     processOptions(textbox1,textbox2);
+    } else
+    {
+     resetAnsi(0);
+     write_str(30,wherey+7,"File not selected!. Exiting!",40,97);
+     resetTerm();
+     gotoxy(wherex,wherey+9);
+     printf("\n");
+     printf("\r");
+     showcursor();
+    }
+  }
  resetAnsi(0);
 //resetTerm();
 
