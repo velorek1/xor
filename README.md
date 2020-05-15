@@ -12,3 +12,4 @@ Usage:
 
 * **Decode** -> xor NEWFILE.DAT BINARY.EXE
 
+**XORFUN** with more terminal capabilities -> OPEN FILE LIST WITH SCROLL + TEXTBOX
