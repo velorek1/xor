@@ -1073,6 +1073,7 @@ int textbox(int wherex, int wherey, int displayLength,
        positionx--;
        charCount--;
        write_ch(positionx + 1, wherey, '.', backcolor, textcolor);
+       text[charCount] = '\0';
        if (positionx < limitCursor-2) write_ch(positionx + 2, wherey, '.', backcolor, textcolor);
        resetch();
       }
