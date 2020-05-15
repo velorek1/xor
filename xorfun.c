@@ -1234,7 +1234,7 @@ int main(){
  pushTerm();
  hidecursor();
  resetch();
- if (wherey>20) {wherey = 3 ; system("clear");} 
+ if (wherey>rows - 10) {wherey = 3 ; system("clear");} 
  printf("\r" AWHT "x0r v1.0"ARST " - Coded by " AWHT "v3l0rek\r\n" ARST);
  printf("\r> Select " AYEL "<source file>" ARST"\n");
  printf("\r");
