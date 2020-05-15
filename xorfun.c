@@ -1221,9 +1221,8 @@ int opfiledialog(int wherey, char filex[MAX_TEXTBOX]) {
 int main(){
  char textbox1[MAX_TEXTBOX];
  char textbox2[MAX_TEXTBOX];
- SCROLLDATA scdata;
 
- int i, wherey, wherex;
+ int wherey, wherex;
  get_pos(&wherey,&wherex);
  get_terminal_dimensions(&rows, &columns);
  pushTerm();
