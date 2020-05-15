@@ -1095,6 +1095,7 @@ void processOptions(char *sourceFileStr,
   int     okFile, okFile2;
   FILE   *fileSource, *fileDestination;
 
+   if (strcmp(sourceFileStr, destinationFileStr) != 0){
       okFile = openFile(&fileSource, sourceFileStr, "rb");	//read only
       okFile2 = openFile(&fileDestination, destinationFileStr, "wb");	//create destination file   
       if(okFile == 1 && okFile2 == 1) {
@@ -1107,6 +1108,10 @@ void processOptions(char *sourceFileStr,
 	//Error opening files.
 	fprintf(stderr, ERR_MSG1_EN);
       }
+   }
+   else{
+  	fprintf(stderr, "ERROR: Destination and source files cannot be the same\n");
+   }
 }
 long fileSize(FILE * fileHandler) {
   long    tempSize;
