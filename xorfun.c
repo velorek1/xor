@@ -1218,6 +1218,7 @@ int opfiledialog(int wherey, char filex[MAX_TEXTBOX]) {
 		listBox1 = NULL;
     } 
   } while(exitFlag != 1);
+ if (scrollData.itemIndex == 0) strcpy(filex,"");
  deleteList(&listBox1);
 
   return 0;
