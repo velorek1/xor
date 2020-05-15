@@ -192,7 +192,7 @@ void    cleanString(char *string, int max);
 void    changeDir(SCROLLDATA * scrollData, char fullPath[MAX],
 		  char newDir[MAX]);
 
-int opfiledialog(char filex[MAX_TEXTBOX]);
+int opfiledialog(int wherey, char filex[MAX_TEXTBOX]);
 
 //KEYBOARD
 /*----------------------------------*/
@@ -1153,7 +1153,7 @@ long encodeDecodeFile(FILE * fileHandler, FILE * fileHandler2) {
   }
   return byteCount;
 }
-int opfiledialog(char filex[MAX_TEXTBOX]) {
+int opfiledialog(int wherey, char filex[MAX_TEXTBOX]) {
   char    ch;
   char    fullPath[MAX];
   char    newDir[MAX];
@@ -1183,14 +1183,14 @@ int opfiledialog(char filex[MAX_TEXTBOX]) {
 
   //Directories loop
   do {
-    //draw_window(50, 7, columns-10, 15, 40);	//shadow
+    //draw_window(30, wherey+2, 50, wherey+4, 47);	//shadow
     //draw_window(50, 6, columns-10, 15, 41);	//window
 
     //Add items to list
     if(listBox1 == NULL) 
       listFiles(&listBox1, newDir);
-    ch = listBox(listBox1, 50, 7, &scrollData, 44, 97, 47,
-		 30, 5);
+    ch = listBox(listBox1, 30, wherey+1, &scrollData, 47, 30, 40,
+		 97, 3);
 
     //Change Dir. New directory is copied in newDir
     if (scrollData.itemIndex!=0) changeDir(&scrollData, fullPath, newDir);
@@ -1228,8 +1228,9 @@ int main(){
  pushTerm();
  hidecursor();
  resetch();
+ if (wherey>20) {wherey = 3 ; system("clear");} 
  printf("\r" AWHT "x0r v1.0"ARST " - Coded by " AWHT "v3l0rek\r\n" ARST);
- printf("\r> Type " AYEL "open" ARST " to select file\n");
+ printf("\r> Select " AYEL "<source file>" ARST"\n");
  printf("\r");
  printf(text0);
  printf("\r");
@@ -1245,22 +1246,45 @@ int main(){
  printf("\r");
  printf(text6);
  printf("\n");
- textbox(30,wherey+2,25,"Source File:",textbox1,37,37,37);
- if (strcmp(textbox1, "open") ==0){
-    opfiledialog(filex);
-    strcpy(textbox1, filex);
-    resetAnsi(0);
- }
- else{ 
- }
- textbox(30,wherey+2,25,"Output File:",textbox2,37,37,37);
- gotoxy(wherex,wherey+9);
- printf("\n");
- printf("\r");
+ //textbox(30,wherey+2,25,"Source File:",textbox1,37,37,37);
+ //if (strcmp(textbox1, "open") ==0){
+ opfiledialog(wherey, filex);
+ strcpy(textbox1, filex);
  resetAnsi(0);
- showcursor();
- processOptions(textbox1,textbox2);
- resetTerm();
+ if (strcmp(textbox1, "") != 0) {
+ 	write_str(30,wherey+5,textbox1,40,97);
+ 	resetAnsi(0);
+ 	textbox(30,wherey+6,25,"Output File:",textbox2,37,37,37);
+	if (strcmp(textbox2, "") != 0) {
+ 	  resetAnsi(0);
+ 	  resetTerm();
+ 	  gotoxy(wherex,wherey+9);
+ 	  printf("\n");
+ 	  printf("\r");
+ 	  showcursor();
+ 	  processOptions(textbox1,textbox2);
+	} else
+	{
+   	  resetAnsi(0);
+   	  write_str(30,wherey+7,"File not selected!. Exiting!",40,97);
+   	  resetTerm();
+   	  gotoxy(wherex,wherey+9);
+   	  printf("\n");
+   	  printf("\r");
+   	  showcursor();
+	}
+ } else
+ {
+   resetAnsi(0);
+   write_str(30,wherey+5,"File not selected!. Exiting!",40,97);
+   resetTerm();
+   gotoxy(wherex,wherey+9);
+   printf("\n");
+   printf("\r");
+   showcursor();
+}
+ resetAnsi(0);
+//resetTerm();
 
  return 0;
 }
