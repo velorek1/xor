@@ -1074,8 +1074,8 @@ int textbox(int wherex, int wherey, int displayLength,
        charCount--;
        write_ch(positionx + 1, wherey, '.', backcolor, textcolor);
        text[charCount] = '\0';
-       if (positionx < limitCursor-2) write_ch(positionx + 2, wherey, '.', backcolor, textcolor);
        resetch();
+       if (positionx < limitCursor-2) write_ch(positionx + 2, wherey, '.', backcolor, textcolor);
       }
     }
     if(ch == K_ENTER || ch == K_TAB)
@@ -1084,6 +1084,7 @@ int textbox(int wherex, int wherey, int displayLength,
     //ENTER OR TAB FINISH LOOP
   } while(exitFlag != 1);
   //clear cursor
+  text[charCount] = '\0';
   write_ch(posCursor, wherey, displayChar, backcolor, textcolor);
   resetch();
   return charCount;
@@ -1211,6 +1212,7 @@ int opfiledialog(int wherey, char filex[MAX_TEXTBOX]) {
     if(scrollData.itemIndex != 0){
         if (strcmp(scrollData.path,"..") != 0)
            strcpy(filex, scrollData.path);
+	   strcat(filex,"\0");
         //printf(AYEL "\n%s", filex);
     }
  
@@ -1257,10 +1259,13 @@ int main(){
  //if (strcmp(textbox1, "open") ==0){
  opfiledialog(wherey, filex);
  strcpy(textbox1, filex);
+ strcat(filex,"\0");
  resetAnsi(0);
  if (strcmp(textbox1, "") == 0) {
    textbox(30,wherey+5,25,"Input File:",textbox1,37,37,37);
    textbox(30,wherey+6,25,"Output File:",textbox2,37,37,37);
+   write_str(30,wherey,"File:",40,97);
+   write_str(35,wherey,textbox1,40,97);
    if (strcmp(textbox1, "") == 0 || strcmp(textbox2, "") == 0) {
      resetAnsi(0);
      write_str(30,wherey+7,"File not selected!. Exiting!",40,97);
